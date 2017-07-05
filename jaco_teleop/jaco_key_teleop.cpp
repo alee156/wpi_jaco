@@ -39,16 +39,10 @@
  */
 
 #include <jaco_teleop/jaco_key_teleop.h>
-#include <iostream>
-#include <fstream>
-using namespace std;
 
 // used for capturing keyboard input
 int kfd = 0;
 struct termios cooked, raw;
-
-std::ofstream myfile;
-
 
 jaco_key_teleop::jaco_key_teleop()
 {
@@ -120,7 +114,6 @@ void jaco_key_teleop::watchdog()
 
 void jaco_key_teleop::loop()
 {
-  
   // get the console in raw mode
   tcgetattr(kfd, &cooked);
   memcpy(&raw, &cooked, sizeof(struct termios));
@@ -177,51 +170,39 @@ void jaco_key_teleop::loop()
         {
           case KEYCODE_W:
             cmd.arm.linear.y = -MAX_TRANS_VEL * linear_throttle_factor;
-	    myfile << "W \n";
             break;
           case KEYCODE_S:
-            cmd.arm.linear.y = MAX_TRANS_VEL * linear_throttle_factor;\
-	    myfile << "S \n";
+            cmd.arm.linear.y = MAX_TRANS_VEL * linear_throttle_factor;
             break;
           case KEYCODE_A:
             cmd.arm.linear.x = MAX_TRANS_VEL * linear_throttle_factor;
-	    myfile << "A \n";
             break;
           case KEYCODE_D:
             cmd.arm.linear.x = -MAX_TRANS_VEL * linear_throttle_factor;
-	    myfile << "D \n";
             break;
           case KEYCODE_R:
             cmd.arm.linear.z = MAX_TRANS_VEL * linear_throttle_factor;
-	    myfile << "R \n";
             break;
           case KEYCODE_F:
             cmd.arm.linear.z = -MAX_TRANS_VEL * linear_throttle_factor;
-	    myfile << "F \n";
             break;
           case KEYCODE_Q:
             cmd.arm.angular.z = -MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "Q \n";
             break;
           case KEYCODE_E:
             cmd.arm.angular.z = MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "E \n";
             break;
           case KEYCODE_UP:
             cmd.arm.angular.x = -MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "Up \n";
             break;
           case KEYCODE_DOWN:
             cmd.arm.angular.x = MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "Down \n";
             break;
           case KEYCODE_LEFT:
             cmd.arm.angular.y = MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "Left \n";
             break;
           case KEYCODE_RIGHT:
             cmd.arm.angular.y = -MAX_ANG_VEL * angular_throttle_factor;
-	    myfile << "Right \n";
             break;
           case
           KEYCODE_2:
@@ -368,10 +349,6 @@ void shutdown(int sig)
 
 int main(int argc, char** argv)
 {
-
-  ofstream myfile;
-  myfile.open ("keyboard_commands.txt");
-
   // initialize ROS and the node
   ros::init(argc, argv, "jaco_key_teleop");
 
@@ -391,6 +368,5 @@ int main(int argc, char** argv)
   my_thread.interrupt();
   my_thread.join();
 
-  myfile.close();
   return EXIT_SUCCESS;
 }
