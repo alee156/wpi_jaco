@@ -39,16 +39,10 @@
  */
 
 #include <jaco_teleop/jaco_key_teleop.h>
-#include <iostream>
-#include <fstream>
-using namespace std;
 
 // used for capturing keyboard input
 int kfd = 0;
 struct termios cooked, raw;
-
-char keys[100];
-int size = 0;
 
 jaco_key_teleop::jaco_key_teleop()
 {
@@ -120,7 +114,6 @@ void jaco_key_teleop::watchdog()
 
 void jaco_key_teleop::loop()
 {
-  
   // get the console in raw mode
   tcgetattr(kfd, &cooked);
   memcpy(&raw, &cooked, sizeof(struct termios));
@@ -177,51 +170,39 @@ void jaco_key_teleop::loop()
         {
           case KEYCODE_W:
             cmd.arm.linear.y = -MAX_TRANS_VEL * linear_throttle_factor;
-	    keys[size++] = 'W';
             break;
           case KEYCODE_S:
-            cmd.arm.linear.y = MAX_TRANS_VEL * linear_throttle_factor;\
-	    keys[size++] = 'S';
+            cmd.arm.linear.y = MAX_TRANS_VEL * linear_throttle_factor;
             break;
           case KEYCODE_A:
             cmd.arm.linear.x = MAX_TRANS_VEL * linear_throttle_factor;
-	    keys[size++] = 'A';
             break;
           case KEYCODE_D:
             cmd.arm.linear.x = -MAX_TRANS_VEL * linear_throttle_factor;
-	    keys[size++] = 'D';
             break;
           case KEYCODE_R:
             cmd.arm.linear.z = MAX_TRANS_VEL * linear_throttle_factor;
-	    keys[size++] = 'R';
             break;
           case KEYCODE_F:
             cmd.arm.linear.z = -MAX_TRANS_VEL * linear_throttle_factor;
-            keys[size++] = 'F';
             break;
           case KEYCODE_Q:
             cmd.arm.angular.z = -MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 'Q';
             break;
           case KEYCODE_E:
             cmd.arm.angular.z = MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 'E';
             break;
           case KEYCODE_UP:
             cmd.arm.angular.x = -MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 'w';
             break;
           case KEYCODE_DOWN:
             cmd.arm.angular.x = MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 's';
             break;
           case KEYCODE_LEFT:
             cmd.arm.angular.y = MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 'a';
             break;
           case KEYCODE_RIGHT:
             cmd.arm.angular.y = -MAX_ANG_VEL * angular_throttle_factor;
-	    keys[size++] = 'd';
             break;
           case
           KEYCODE_2:
@@ -313,7 +294,6 @@ void jaco_key_teleop::displayHelp()
   switch (mode)
   {
     case ARM_CONTROL:
-      puts("Albert is awesome");
       puts(" ------------------------------------");
       puts("| Jaco Keyboard Teleop Help          |");
       puts("|------------------------------------|*");
@@ -369,12 +349,6 @@ void shutdown(int sig)
 
 int main(int argc, char** argv)
 {
-
-
-  printf("Program is running");
-  ofstream myfile;
-  myfile.open ("/home/jhuapl/keyboard_commands.txt");
-
   // initialize ROS and the node
   ros::init(argc, argv, "jaco_key_teleop");
 
@@ -394,10 +368,5 @@ int main(int argc, char** argv)
   my_thread.interrupt();
   my_thread.join();
 
-  for(int count = 0; count < size; count++) {
-    myfile << keys[count] << "\n";
-  }
-
-  myfile.close();
   return EXIT_SUCCESS;
 }
