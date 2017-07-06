@@ -150,6 +150,11 @@ void jaco_key_teleop::loop()
       displayHelp();
     }
 
+    if (c == KEYCODE_Z)
+    {
+      break;
+    }
+
     switch (mode)
     {
       case ARM_CONTROL:
@@ -313,7 +318,6 @@ void jaco_key_teleop::displayHelp()
   switch (mode)
   {
     case ARM_CONTROL:
-      puts("Albert is awesome");
       puts(" ------------------------------------");
       puts("| Jaco Keyboard Teleop Help          |");
       puts("|------------------------------------|*");
@@ -373,7 +377,7 @@ int main(int argc, char** argv)
 
   printf("Program is running");
   ofstream myfile;
-  myfile.open ("/home/jhuapl/keyboard_commands.txt");
+  myfile.open ("/home/jaco/keyboard_commands.txt");
 
   // initialize ROS and the node
   ros::init(argc, argv, "jaco_key_teleop");

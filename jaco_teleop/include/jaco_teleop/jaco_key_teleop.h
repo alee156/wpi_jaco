@@ -67,6 +67,7 @@
 #define KEYCODE_2 0x32
 #define KEYCODE_3 0x33
 #define KEYCODE_H 0x68
+#define KEYCODE_Z 0x7a
 
 //Control modes
 #define ARM_CONTROL 0 
